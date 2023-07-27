@@ -1,0 +1,12 @@
+name: smw
+channels:
+- conda-forge
+dependencies:
+- python>=3.11
+- yfinance
+- requests
+- pre-commit
+- isort
+- black
+- isort
+- mypy
