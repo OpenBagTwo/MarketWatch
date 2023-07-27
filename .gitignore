@@ -1,0 +1,7 @@
+/.idea
+/node_modules
+public
+hugo_stats.json
+.DS_Store
+resources
+.hugo_build.lock
