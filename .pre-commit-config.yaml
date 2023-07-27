@@ -1,0 +1,23 @@
+repos:
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.9.0
+  hooks:
+  - id: pretty-format-ini
+    args: [--autofix]
+    files: ^.*\.(cfg|CFG|ini|INI)$
+  - id: pretty-format-toml
+    args: [--autofix]
+  - id: pretty-format-golang
+    args: [--autofix]
+  - id: pretty-format-yaml
+    args: [--autofix]
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: check-json
+  - id: pretty-format-json
+    args: [--autofix, --no-sort-keys, --indent=4]
+  - id: check-yaml
+  - id: trailing-whitespace
+  - id: check-executables-have-shebangs
+  - id: end-of-file-fixer
