@@ -1,6 +1,9 @@
 # SMBC Market Watch
 
-***A Financial Headline Generator Implementing an Idea from a Webcomic***
+[![Generate Post](https://github.com/OpenBagTwo/MarketWatch/actions/workflows/generate_content.yaml/badge.svg)](https://github.com/OpenBagTwo/MarketWatch/actions/workflows/generate_content.yaml)
+
+***A Meme Financial Headline Generator***
+
 
 ## What Is This?
 
