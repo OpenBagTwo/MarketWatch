@@ -36,7 +36,7 @@ base_color = "bg-gray-800"
 # Light mode by default : light
 darkmode = "light"
 # Site description
-description = "Blonde theme for Hugo."
+description = "Financial Headline Generator"
 # The number of articles to be displayed on a single page.
 paginator_pages = "5"
 # Number of tags to be displayed.

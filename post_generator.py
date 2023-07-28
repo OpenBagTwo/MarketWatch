@@ -94,7 +94,12 @@ def get_market_movement(ticker: str, date: dt.date) -> bool:
         .history(period="1d", start=date, end=date + dt.timedelta(days=1))
         .reset_index()
     )
-    return stonk.at[0, "Close"] > stonk.at[0, "Open"]
+    try:
+        return stonk.at[0, "Close"] > stonk.at[0, "Open"]
+    except KeyError as no_data:
+        raise ValueError(
+            f"No data found for {ticker} on {date.isoformat()}. Is it a weekend or a holiday?"
+        )
 
 
 class _Article(TypedDict):
