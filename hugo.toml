@@ -3,7 +3,7 @@ baseURL = 'https://openbagtwo.github.io/MarketWatch'
 enableInlineShortcodes = true
 enableRobotsTXT = true
 languageCode = 'en-us'
-theme = 'Blonde'
+theme = ['hugo-redirect', 'Blonde']
 title = 'SMBC MarketWatch'
 
 [menu]
