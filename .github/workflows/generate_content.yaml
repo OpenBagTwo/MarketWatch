@@ -5,6 +5,7 @@ name: Generate Post
 on:
   schedule:
   - cron: 15 13 * * 2-6     # run at 9:15am EDT, Tues-Sat
+  workflow_dispatch:
 
 jobs:
   generate_post:
