@@ -21,7 +21,7 @@ jobs:
         python -m pip install yfinance requests
     - name: Make a new post
       env:
-        GUARDIAN_API_KEY: ${{secrets.GUARDIAN_API_KEY}}
+        GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
       run: |
         python post_generator.py
     - name: Publish new post
