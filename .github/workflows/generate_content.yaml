@@ -5,6 +5,8 @@ name: Generate Post
 on:
   schedule:
   - cron: 15 13 * * 2-6     # run at 9:15am EDT, Tues-Sat
+env:
+  GUARDIAN_API_KEY: ${{secrets.GUARDIAN_API_KEY}}
 
 jobs:
   generate_post:
