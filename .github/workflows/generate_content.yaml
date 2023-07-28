@@ -1,0 +1,29 @@
+# Create a new post
+
+name: Generate Post
+
+on:
+  schedule:
+  - cron: 15 13 * * 2-6     # run at 9:15am EDT, Tues-Sat
+
+jobs:
+  generate_post:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install yfinance requests
+    - name: Make a new post
+      run: |
+        python post_generator.py
+    - name: Publish new post
+      run: |
+        git add content/
+        git commit -m "New post for $(date)"
+        git push
