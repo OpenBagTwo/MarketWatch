@@ -5,8 +5,6 @@ name: Generate Post
 on:
   schedule:
   - cron: 15 13 * * 2-6     # run at 9:15am EDT, Tues-Sat
-env:
-  GUARDIAN_API_KEY: ${{secrets.GUARDIAN_API_KEY}}
 
 jobs:
   generate_post:
@@ -22,6 +20,8 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install yfinance requests
     - name: Make a new post
+      env:
+        GUARDIAN_API_KEY: ${{secrets.GUARDIAN_API_KEY}}
       run: |
         python post_generator.py
     - name: Publish new post
