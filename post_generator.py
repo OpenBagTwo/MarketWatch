@@ -25,10 +25,11 @@ TICKERS: dict[str, str] = {
 UPS: list[str] = [
     "soars",
     "skyrockets",
-    "captapults",
+    "catapults",
     "zooms",
     "jumps",
     "shoots up",
+    "goes wild",
 ]
 
 DOWNS: list[str] = [
@@ -38,6 +39,7 @@ DOWNS: list[str] = [
     "dives",
     "plunges",
     "scrambling",
+    "tumbles",
 ]
 
 
