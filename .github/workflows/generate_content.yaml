@@ -29,8 +29,10 @@ jobs:
         GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
       run: |
         python post_generator.py
-    - name: Publish new post
+    - name: Push new post
       run: |
         git add content/
         git commit -m "New post for $(date)"
         git push
+    - name: Publish new post
+      uses: ./.github/workflows/hugo.yaml
