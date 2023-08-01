@@ -34,5 +34,3 @@ jobs:
         git add content/
         git commit -m "New post for $(date)"
         git push
-    - name: Publish new post
-      uses: ./.github/workflows/hugo.yaml
