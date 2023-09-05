@@ -200,8 +200,10 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
 
     return f"""---
 author: {AUTHOR}
-title: {headline}
-summary: {article["lede"]}
+title: >
+    {headline}
+summary: >
+    {article["lede"]}
 image: {"up" if is_up else "down"}1.png
 tags: [{tags}]
 date: {date.isoformat()}
