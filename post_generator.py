@@ -192,7 +192,11 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
 
     status = random.choice(UPS if is_up else DOWNS)
 
-    article = get_random_article(guardian_api_key, date)
+    while True:
+        article = get_random_article(guardian_api_key, date)
+        if article["headline"].startswith("<") or article["lede"].startswith("<"):
+            continue
+        break
 
     headline = " ".join([indicator, status, "as", article["headline"]])
 
