@@ -1,5 +1,6 @@
 author = 'Gili "OpenBagTwo" Barlev'
 baseURL = 'https://openbagtwo.github.io/MarketWatch'
+copyright = 'The Guardian, Zach Weinersmith and Gili "OpenBagTwo" Barlev'
 enableInlineShortcodes = true
 enableRobotsTXT = true
 languageCode = 'en-us'

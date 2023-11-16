@@ -161,10 +161,12 @@ def get_random_article(api_key: str, date: dt.date) -> _Article:
             f"Couldn't hit The Guardian API. Recieved error code: {response.status_code}\n{response.text}"
         )
 
+    copyright_notice = "© The Guardian—"
     article = json.loads(response.text)["response"]["content"]
     return {
         "headline": _clean_headline(article["webTitle"]),
-        "lede": article["fields"]["body"].split("</p>")[0].split("<p>")[-1],
+        "lede": copyright_notice
+        + article["fields"]["body"].split("</p>")[0].split("<p>")[-1],
         "url": article["webUrl"],
         "tags": [article["pillarName"]],
     }
