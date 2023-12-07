@@ -196,7 +196,7 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
 
     while True:
         article = get_random_article(guardian_api_key, date)
-        if article["headline"].startswith("<") or article["lede"].startswith("<"):
+        if "<" in (article["headline"] + article["lede"]):
             continue
         break
 
