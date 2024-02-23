@@ -194,11 +194,11 @@ def express_values_in_scholarships(raw_content: str) -> str:
     str
         The converted content
     """
-    values = re.findall(r"([\$|£])([0-9\.]*)(m|bn|)", raw_content)
+    values = re.findall(r"([\$|£])([0-9\.,]*)(m|bn|)", raw_content)
 
     converted = raw_content
     for currency, figure_str, multiplier in values:
-        figure = float(figure_str)
+        figure = float(figure_str.replace(",", ""))
         if currency == "£":
             figure *= GBP_TO_USD_CONVERSION_RATE
         match multiplier:
