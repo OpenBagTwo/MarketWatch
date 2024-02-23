@@ -3,6 +3,7 @@ import datetime as dt
 import json
 import os
 import random
+import re
 from pathlib import Path
 from typing import TypedDict
 
@@ -66,6 +67,13 @@ EXCLUDED_SECTIONS: list[str] = [
     "Guardian holiday offers",
     "World news",
 ]
+
+"""Cite: https://college.harvard.edu/financial-aid/how-aid-works accessed on 2024-02-23,
+using "Total billed and unbilled costs," plus the cost of health insurance, for the
+23-24 academic year, multiplied by four. In USD."""
+COST_OF_FULL_RIDE_AT_HARVARD: float = 366280
+
+GBP_TO_USD_CONVERSION_RATE: float = 1.25  # Approximation. TODO: pull from Yahoo Finance
 
 
 def _clean_headline(headline: str) -> str:
@@ -172,6 +180,48 @@ def get_random_article(api_key: str, date: dt.date) -> _Article:
     }
 
 
+def express_values_in_scholarships(raw_content: str) -> str:
+    """Express any monetary values in a string in terms of full rides to Harvard,
+    a la https://www.smbc-comics.com/comic/2014-09-28
+
+    Parameters
+    ----------
+    raw_content : str
+        The original content
+
+    Returns
+    -------
+    str
+        The converted content
+    """
+    values = re.findall(r"([\$|£])([0-9\.]*)(m|bn|)", raw_content)
+
+    converted = raw_content
+    for currency, figure_str, multiplier in values:
+        figure = float(figure_str)
+        if currency == "£":
+            figure *= GBP_TO_USD_CONVERSION_RATE
+        match multiplier:
+            case "m":
+                figure *= 1e6
+            case "bn":
+                figure *= 1e9
+            case _:
+                pass
+        n_scholarships = figure / COST_OF_FULL_RIDE_AT_HARVARD
+        if n_scholarships < 1:
+            substitution = f"{n_scholarships:.1g}"
+        else:
+            substitution = f"{n_scholarships:.1f}"
+        substitution += " full rides to Harvard"
+
+        converted = converted.replace(
+            f"{currency}{figure_str}{multiplier}", substitution
+        )
+
+    return converted
+
+
 def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
     """Create a new post
 
@@ -199,6 +249,9 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
         if "<" in (article["headline"] + article["lede"]):
             continue
         break
+
+    article["headline"] = express_values_in_scholarships(article["headline"])
+    article["lede"] = express_values_in_scholarships(article["lede"])
 
     headline = " ".join([indicator, status, "as", article["headline"]])
 
