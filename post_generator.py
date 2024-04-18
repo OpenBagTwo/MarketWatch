@@ -73,7 +73,16 @@ using "Total billed and unbilled costs," plus the cost of health insurance, for 
 23-24 academic year, multiplied by four. In USD."""
 COST_OF_FULL_RIDE_AT_HARVARD: float = 366280
 
-GBP_TO_USD_CONVERSION_RATE: float = 1.25  # Approximation. TODO: pull from Yahoo Finance
+
+def get_gbp_to_usd():
+    # The symbol for GBP to USD on Yahoo Finance is "GBPUSD=X"
+    gbp_usd = yf.Ticker("GBPUSD=X")
+
+    # Fetch the latest price
+    hist = gbp_usd.history(period="1d")
+
+    # Return the last closing price, which represents the latest exchange rate
+    return hist['Close'].iloc[-1]
 
 
 def _clean_headline(headline: str) -> str:
@@ -180,7 +189,7 @@ def get_random_article(api_key: str, date: dt.date) -> _Article:
     }
 
 
-def express_values_in_scholarships(raw_content: str) -> str:
+def express_values_in_scholarships(raw_content: str, gbp_to_usd: float = 1.25) -> str:
     """Express any monetary values in a string in terms of full rides to Harvard,
     a la https://www.smbc-comics.com/comic/2014-09-28
 
@@ -188,6 +197,9 @@ def express_values_in_scholarships(raw_content: str) -> str:
     ----------
     raw_content : str
         The original content
+
+    gbp_to_usd : float
+        The current exchange rate from British Pounds to US Dollars
 
     Returns
     -------
@@ -200,7 +212,7 @@ def express_values_in_scholarships(raw_content: str) -> str:
     for currency, figure_str, multiplier in values:
         figure = float(figure_str.replace(",", ""))
         if currency == "£":
-            figure *= GBP_TO_USD_CONVERSION_RATE
+            figure *= gbp_to_usd
         match multiplier:
             case "m":
                 figure *= 1e6
@@ -250,8 +262,9 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
             continue
         break
 
-    article["headline"] = express_values_in_scholarships(article["headline"])
-    article["lede"] = express_values_in_scholarships(article["lede"])
+    gbp_to_usd = get_gbp_to_usd()
+    article["headline"] = express_values_in_scholarships(article["headline"], gbp_to_usd)
+    article["lede"] = express_values_in_scholarships(article["lede"], gbp_to_usd)
 
     headline = " ".join([indicator, status, "as", article["headline"]])
 
