@@ -82,7 +82,7 @@ def get_gbp_to_usd():
     hist = gbp_usd.history(period="1d")
 
     # Return the last closing price, which represents the latest exchange rate
-    return hist['Close'].iloc[-1]
+    return hist["Close"].iloc[-1]
 
 
 def _clean_headline(headline: str) -> str:
@@ -263,7 +263,9 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
         break
 
     gbp_to_usd = get_gbp_to_usd()
-    article["headline"] = express_values_in_scholarships(article["headline"], gbp_to_usd)
+    article["headline"] = express_values_in_scholarships(
+        article["headline"], gbp_to_usd
+    )
     article["lede"] = express_values_in_scholarships(article["lede"], gbp_to_usd)
 
     headline = " ".join([indicator, status, "as", article["headline"]])
