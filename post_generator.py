@@ -4,10 +4,10 @@ import json
 import os
 import random
 import re
+from functools import cache
 from pathlib import Path
 from typing import TypedDict
 
-import pandas as pd
 import requests
 import yfinance as yf
 
@@ -74,7 +74,15 @@ using "Total billed and unbilled costs," plus the cost of health insurance, for 
 COST_OF_FULL_RIDE_AT_HARVARD: float = 366280
 
 
-def get_gbp_to_usd():
+@cache
+def get_gbp_to_usd() -> float:
+    """Grab the current GBP to USD conversion rate from Yahoo Finance
+
+    Returns
+    -------
+    float
+        The value in US dollars equivalent to one British Pound
+    """
     # The symbol for GBP to USD on Yahoo Finance is "GBPUSD=X"
     gbp_usd = yf.Ticker("GBPUSD=X")
 
@@ -189,7 +197,7 @@ def get_random_article(api_key: str, date: dt.date) -> _Article:
     }
 
 
-def express_values_in_scholarships(raw_content: str, gbp_to_usd: float = 1.25) -> str:
+def express_values_in_scholarships(raw_content: str) -> str:
     """Express any monetary values in a string in terms of full rides to Harvard,
     a la https://www.smbc-comics.com/comic/2014-09-28
 
@@ -197,9 +205,6 @@ def express_values_in_scholarships(raw_content: str, gbp_to_usd: float = 1.25) -
     ----------
     raw_content : str
         The original content
-
-    gbp_to_usd : float
-        The current exchange rate from British Pounds to US Dollars
 
     Returns
     -------
@@ -212,7 +217,7 @@ def express_values_in_scholarships(raw_content: str, gbp_to_usd: float = 1.25) -
     for currency, figure_str, multiplier in values:
         figure = float(figure_str.replace(",", ""))
         if currency == "£":
-            figure *= gbp_to_usd
+            figure *= get_gbp_to_usd()
         match multiplier:
             case "m":
                 figure *= 1e6
@@ -262,11 +267,8 @@ def generate_post(guardian_api_key: str, date: dt.date | None = None) -> str:
             continue
         break
 
-    gbp_to_usd = get_gbp_to_usd()
-    article["headline"] = express_values_in_scholarships(
-        article["headline"], gbp_to_usd
-    )
-    article["lede"] = express_values_in_scholarships(article["lede"], gbp_to_usd)
+    article["headline"] = express_values_in_scholarships(article["headline"])
+    article["lede"] = express_values_in_scholarships(article["lede"])
 
     headline = " ".join([indicator, status, "as", article["headline"]])
 
