@@ -116,11 +116,7 @@ def get_market_movement(ticker: str, date: dt.date) -> bool:
     bool
         True if the stock closed higher than it opened, False otherwise.
     """
-    stonk = (
-        yf.Ticker(ticker)
-        .history(period="1d", start=date, end=date + dt.timedelta(days=1))
-        .reset_index()
-    )
+    stonk = yf.Ticker(ticker).history(period="1d", start=date).reset_index()
     try:
         return stonk.at[0, "Close"] > stonk.at[0, "Open"]
     except KeyError as no_data:
